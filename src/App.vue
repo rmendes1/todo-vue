@@ -13,11 +13,11 @@
             <!--/ Todo form -->
 
             <!-- Todo items -->
-            <TodoItems />
+            <TodoItems v-if="$store.state.todos.length"/>
             <!--/ Todo items -->
 
             <!-- Todo empty -->
-            <TodoEmpty />
+            <TodoEmpty v-else />
             <!--/ Todo empty -->
           </template>
 
@@ -32,7 +32,6 @@ import TodoSpinner from './components/TodoSpinner.vue';
 import TodoFormAdd from './components/TodoFormAdd.vue';
 import TodoItems from './components/TodoItems.vue';
 import TodoEmpty from './components/TodoEmpty.vue';
-import axios from 'axios';
 export default {
   name: 'App',
   components: {
@@ -48,13 +47,10 @@ export default {
     }
   },
 
-  async created() {
+  created() {
     this.loading = true
-    this.todos = await axios.get('http://localhost:3000/todos').then((response) => {
-      this.$store.commit('storeTodos', response.data)
-    })
-    .finally(() => {
-        this.loading = false
+    this.$store.dispatch('getTodos').finally(() => {
+      this.loading = false
     })
   }
 
